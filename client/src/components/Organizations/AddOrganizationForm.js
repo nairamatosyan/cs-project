@@ -1,19 +1,8 @@
 import React, { PureComponent } from 'react';
-import { Padding, Margin } from 'styled-components-spacing';
 import {
-  Row,
-  Col,
-  Typography,
   Select,
-  InputNumber,
-  Switch,
-  Radio,
-  Slider,
   Button,
-  Upload,
   Icon,
-  Rate,
-  Checkbox,
   Form,
   Input,
 } from 'antd';
@@ -21,6 +10,10 @@ const { Option } = Select;
 let id = 0;
 
 class AddOrganization extends PureComponent {
+  state = {
+    positions: [],
+  }
+
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
@@ -28,14 +21,6 @@ class AddOrganization extends PureComponent {
         console.log('Received values of form: ', values);
       }
     });
-  };
-
-  normFile = e => {
-    console.log('Upload event:', e);
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e && e.fileList;
   };
 
   remove = k => {
@@ -74,15 +59,10 @@ class AddOrganization extends PureComponent {
         sm: { span: 20 },
       },
     };
-    const formItemLayoutWithOutLabel = {
-      wrapperCol: {
-        sm: { span: 20, offset: 4 },
-      },
-    };
 
     getFieldDecorator('keys', { initialValue: [] });
     const keys = getFieldValue('keys');
-    const formItems = keys.map((k, index) => (<Form.Item {...formItemLayout} key={k}>
+    const formItems = keys.map((k, index) => (<Form.Item {...formItemLayout} key={index}>
         <Form.Item
           label={index === 0 ? 'Positions' : ''}
           required={false}
