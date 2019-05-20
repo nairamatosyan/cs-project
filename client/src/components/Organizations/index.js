@@ -8,15 +8,13 @@ class Organizations extends PureComponent {
   state = {
     add: false,
     data: [{
+      id: 1,
       name: 'test1'
     },
     {
+      id: 2,
       name: 'test2'
     }]
-  }
-
-  addOrganization = () => {
-      this.setState({add: true})
   }
 
   render() {
@@ -32,7 +30,7 @@ class Organizations extends PureComponent {
 
               {this.state.data.map((item, key) => (
                 <Padding bottom={3} key={key}>
-                  <Card>{item.name}</Card>
+                <Card hoverable={true} onClick={() => this.openOrganization(item.id)}>{item.name}</Card>
                 </Padding>
               ))}
             </div>}
@@ -44,6 +42,15 @@ class Organizations extends PureComponent {
         </Row>
       </Margin>
     </React.Fragment>)
+  }
+
+  
+  addOrganization = () => {
+    this.setState({add: true})
+  }
+
+  openOrganization = (id) => {
+    this.props.history.push(`/organization/${id}`);
   }
 }
 
