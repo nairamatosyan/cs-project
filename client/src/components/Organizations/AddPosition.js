@@ -1,5 +1,8 @@
 import React, { PureComponent } from 'react';
 import { Form, DatePicker, Button, Input, Select, Upload, Icon } from 'antd';
+import axios from 'axios';
+import { getAccessToken } from '../../config/localStorage';
+import { API_ROOT } from '../../config/env-vars';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
@@ -11,6 +14,15 @@ class AddPosition extends PureComponent {
       if (err) {
         return;
       }
+      const accessToken = getAccessToken();
+      axios.post(`${API_ROOT}/organizations//addPosition`, fieldsValue, {
+          headers: { Authorization: `Bearer ${accessToken}`}
+        }).then(({ data }) => {
+          window.location.reload();
+        })
+        .catch(error => {
+          console.log(error);
+        })
     });
   };
 

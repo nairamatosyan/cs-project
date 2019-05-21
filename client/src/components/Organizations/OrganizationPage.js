@@ -108,7 +108,7 @@ class OrganizationPage extends PureComponent {
             }
         },
           borderColor: 'white',
-          nodeWidth: 65
+          nodeWidth: 100
       }],
       tooltip: {
           outside: true

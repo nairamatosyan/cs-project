@@ -26,11 +26,7 @@ class AddCollaborator extends PureComponent {
       axios.post(`${API_ROOT}/organizations/addCollaborator`, values, {
           headers: { Authorization: `Bearer ${accessToken}`}
         }).then(({ data }) => {
-          // if (data) {
-          //   window.location.reload();
-          //   return;
-          // }
-          // message.error('Something went wrong!');
+          window.location.reload();
         })
         .catch(error => {
           message.error('Something went wrong! Please try again.')

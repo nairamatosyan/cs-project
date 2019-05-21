@@ -28,9 +28,7 @@ const EmployeeSchema = new mongoose.Schema({
 });
 
 EmployeeSchema.statics.getEmployeesData = async function(positionIds) {
-    let positionIdsObject = positionIds.map(s => mongoose.Types.ObjectId(s));
-    console.log(positionIdsObject)
-    return Employee.find({position: { '$in': {positionIdsObject}}});
+    return Employee.find({position: { '$in': positionIds}});
 }
 
 EmployeeSchema.statics.addNewEmployee = async function(data) {
