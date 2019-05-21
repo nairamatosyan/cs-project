@@ -1,19 +1,8 @@
 import React, { PureComponent } from 'react';
-import { Padding, Margin } from 'styled-components-spacing';
 import {
-  Row,
-  Col,
-  Typography,
   Select,
-  InputNumber,
-  Switch,
-  Radio,
-  Slider,
   Button,
-  Upload,
   Icon,
-  Rate,
-  Checkbox,
   Form,
   Input,
 } from 'antd';
@@ -21,6 +10,10 @@ const { Option } = Select;
 let id = 0;
 
 class AddOrganization extends PureComponent {
+  state = {
+    positions: [],
+  }
+
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
@@ -28,14 +21,6 @@ class AddOrganization extends PureComponent {
         console.log('Received values of form: ', values);
       }
     });
-  };
-
-  normFile = e => {
-    console.log('Upload event:', e);
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e && e.fileList;
   };
 
   remove = k => {
@@ -65,7 +50,7 @@ class AddOrganization extends PureComponent {
   }
 
   render() {
-    const { getFieldDecorator, getFieldValue } = this.props.form;
+    const { getFieldDecorator, getFieldValue, getFieldsValue } = this.props.form;
     const formItemLayout = {
       labelCol: {
         sm: { span: 4 },
@@ -74,20 +59,15 @@ class AddOrganization extends PureComponent {
         sm: { span: 20 },
       },
     };
-    const formItemLayoutWithOutLabel = {
-      wrapperCol: {
-        sm: { span: 20, offset: 4 },
-      },
-    };
 
     getFieldDecorator('keys', { initialValue: [] });
     const keys = getFieldValue('keys');
-    const formItems = keys.map((k, index) => (<Form.Item {...formItemLayout} key={k}>
+    const formItems = keys.map((k, index) => (<Form.Item {...formItemLayout} key={index}>
         <Form.Item
           label={index === 0 ? 'Positions' : ''}
           required={false}
           style={{ display: 'inline-block', width: 'calc(50% - 12px)' }}>
-          {getFieldDecorator(`names[${k}]`, {
+          {getFieldDecorator(`positions[${k}]`, {
             validateTrigger: ['onChange', 'onBlur'],
             rules: [
               {
@@ -108,15 +88,16 @@ class AddOrganization extends PureComponent {
 
         {!!index && <Form.Item
           style={{ display: 'inline-block', width: 'calc(50% - 12px)' }}>
-          {getFieldDecorator('gender', {
+          {getFieldDecorator(`parents[${k}]`, {
             rules: [{ required: true, message: 'Please select parent position' }],
           })(
             <Select
               placeholder="Select parent"
               onChange={this.selectParent}
             >
-              <Option key={1} value="male">male</Option>
-              <Option key={2} value="female">female</Option>
+              {getFieldsValue().positions.map((item, key) => (
+                (item && key !== k) && <Option key={key} value={key}>{item}</Option>
+              ))}
             </Select>,
           )}
         </Form.Item>}

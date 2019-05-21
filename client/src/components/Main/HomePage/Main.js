@@ -5,7 +5,6 @@ import { withRouter } from 'react-router-dom';
 import {
   Button,
   Row,
-  Col,
   Typography,
 } from 'antd';
 
@@ -25,7 +24,7 @@ const homePage = (props) => {
         <Padding top={3} bottom={3}>
           <Row type="flex" justify="center"><Button type="primary" size="large" onClick={signIn}>Sign in</Button></Row>
         </Padding>
-        <Row type="flex" justify="center"><Button onClick={signUp}>Sign in</Button></Row>
+        <Row type="flex" justify="center"><Button onClick={signUp}>Sign up</Button></Row>
       </Margin>
     </React.Fragment>
   );
