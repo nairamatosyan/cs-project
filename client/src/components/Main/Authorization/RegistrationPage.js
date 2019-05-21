@@ -1,9 +1,11 @@
 import React, { PureComponent } from 'react';
 import {
-  Form, Icon, Input, Button, Col, Row
+  Form, Icon, Input, Button, Col, Row, message
 } from 'antd';
 import { Margin } from 'styled-components-spacing';
+import { withRouter } from 'react-router-dom';
 import axios from 'axios';
+import { API_ROOT } from '../../../config/env-vars';
 
 class RegistrationPage extends PureComponent {
   render() {
@@ -76,15 +78,15 @@ class RegistrationPage extends PureComponent {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        axios.post('http://localhost:3030/users',{
+        axios.post(`${API_ROOT}/users`, {
           email: values.email, 
           password: values.password}).then(response => {
           
-          alert('You have registered successfully. Now please login to your account.');
-          window.location = '/sign-in';
+          message.success('You have registered successfully. Now please login to your account.');
+          this.props.history.push('/sign-in');
         })
         .catch(error => {
-          console.log(error);
+          message.error('Something went wrong! Please try again.')
         })
       }
     });
@@ -92,4 +94,4 @@ class RegistrationPage extends PureComponent {
 }
 
 const FormWrapper = Form.create()(RegistrationPage);
-export default FormWrapper;
+export default withRouter(FormWrapper);

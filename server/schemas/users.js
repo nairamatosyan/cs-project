@@ -30,12 +30,10 @@ UserSchema.statics.findUserForLogin = function(email) {
 }
 
 UserSchema.methods.createUser = async function() {
-    console.log(this)
     if (await User.findOne({ email: this.email })) {
         return 0;
     }
     this.password = pbkdf2.pbkdf2Sync(this.password, 'salt', 1, 32, 'sha512').toString('hex');
-    console.log(this, '22222')
     this.save();
     return 1;
 }

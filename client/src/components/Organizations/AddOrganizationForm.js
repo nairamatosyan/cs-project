@@ -8,6 +8,7 @@ import {
   message,
 } from 'antd';
 import { getAccessToken } from '../../config/localStorage';
+import { API_ROOT } from '../../config/env-vars';
 import axios from 'axios';
 
 const { Option } = Select;
@@ -23,7 +24,7 @@ class AddOrganization extends PureComponent {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         const accessToken = getAccessToken();
-        axios.post('http://localhost:3030/organizations/add', {
+        axios.post(`${API_ROOT}/organizations/add`, {
             data: values
         }, {
           headers: { Authorization: `Bearer ${accessToken}`}
@@ -35,9 +36,8 @@ class AddOrganization extends PureComponent {
           message.error('Something went wrong!');
         })
         .catch(error => {
-          console.log(error);
-        })
-        console.log('Received values of form: ', values);
+          message.error('Something went wrong! Please try again.')
+        });
       }
     });
   };

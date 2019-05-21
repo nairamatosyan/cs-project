@@ -2,6 +2,7 @@ import React from 'react';
 import { Row, Layout } from 'antd';
 import { withRouter } from 'react-router-dom';
 import SettingsDropDown from './SettingsDropDown';
+import { AuthConsumer } from './AuthContext';
 const { Header } = Layout;
 
 const mainHeader = (props) => {
@@ -12,7 +13,9 @@ const mainHeader = (props) => {
   return (<Header theme={'light'}>
     <Row type="flex" justify="space-between">
       <div></div>
-      <SettingsDropDown />
+      <AuthConsumer>
+        {({ isAuth, login, logout }) => (isAuth && <SettingsDropDown />)}
+      </AuthConsumer>
     </Row>
   </Header>);
 }

@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
-import { Form, DatePicker, Button, Input, Select, Upload, Icon } from 'antd';
+import { Form, DatePicker, Button, Input, Select, message } from 'antd';
 import axios from 'axios';
 import { getAccessToken } from '../../config/localStorage';
+import { API_ROOT } from '../../config/env-vars';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
@@ -22,7 +23,7 @@ class AddCollaborator extends PureComponent {
         'range-picker': [rangeValue[0].format('YYYY-MM-DD'), rangeValue[1].format('YYYY-MM-DD')],
       };
       const accessToken = getAccessToken();
-      axios.post('http://localhost:3030/organizations/addCollaborator', values, {
+      axios.post(`${API_ROOT}/organizations/addCollaborator`, values, {
           headers: { Authorization: `Bearer ${accessToken}`}
         }).then(({ data }) => {
           // if (data) {
@@ -32,20 +33,10 @@ class AddCollaborator extends PureComponent {
           // message.error('Something went wrong!');
         })
         .catch(error => {
-          console.log(error);
+          message.error('Something went wrong! Please try again.')
         })
-      console.log('Received values of form: ', values);
     });
   };
-
-  normFile = e => {
-    console.log('Upload event:', e);
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e && e.fileList;
-  };
-  
 
   render() {
     const { getFieldDecorator } = this.props.form;

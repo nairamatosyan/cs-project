@@ -8,6 +8,7 @@ import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import axios from 'axios';
 import { getAccessToken } from '../../config/localStorage';
+import { API_ROOT } from '../../config/env-vars';
 require("highcharts/modules/sankey")(Highcharts);
 require("highcharts/modules/organization")(Highcharts);
 require("highcharts/modules/exporting")(Highcharts);
@@ -29,13 +30,13 @@ class OrganizationPage extends PureComponent {
   
   async componentDidMount() {
     const accessToken = getAccessToken();
-    axios.get(`http://localhost:3030${this.props.location.pathname}`, {
+    axios.get(`${API_ROOT}${this.props.location.pathname}`, {
         headers: { Authorization: `Bearer ${accessToken}`}
       }).then(({ data }) => {
         this.setState({data: {name: data.organization[0].name, positions: data.positionData, mainData: data.data}});
       })
       .catch(error => {
-        console.log(error);
+        message.error('Something went wrong! Please try again.');
       })
   }
 
@@ -75,7 +76,6 @@ class OrganizationPage extends PureComponent {
 
   
   getChartOptions = () => {
-    // console.log(this.state.mainData);
     return {
       chart: {
         height: 600,
