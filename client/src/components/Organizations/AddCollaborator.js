@@ -1,7 +1,10 @@
 import React, { PureComponent } from 'react';
 import { Form, DatePicker, Button, Input, Select, Upload, Icon } from 'antd';
+import axios from 'axios';
+import { getAccessToken } from '../../config/localStorage';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
+
 
 class AddCollaborator extends PureComponent {
   handleSubmit = e => {
@@ -16,11 +19,21 @@ class AddCollaborator extends PureComponent {
       const rangeValue = fieldsValue['range-picker'];
       const values = {
         ...fieldsValue,
-        'date-picker': fieldsValue['date-picker'].format('YYYY-MM-DD'),
-        'date-time-picker': fieldsValue['date-time-picker'].format('YYYY-MM-DD HH:mm:ss'),
-        'month-picker': fieldsValue['month-picker'].format('YYYY-MM'),
         'range-picker': [rangeValue[0].format('YYYY-MM-DD'), rangeValue[1].format('YYYY-MM-DD')],
       };
+      const accessToken = getAccessToken();
+      axios.post('http://localhost:3030/organizations/addCollaborator', values, {
+          headers: { Authorization: `Bearer ${accessToken}`}
+        }).then(({ data }) => {
+          // if (data) {
+          //   window.location.reload();
+          //   return;
+          // }
+          // message.error('Something went wrong!');
+        })
+        .catch(error => {
+          console.log(error);
+        })
       console.log('Received values of form: ', values);
     });
   };
@@ -80,17 +93,9 @@ class AddCollaborator extends PureComponent {
         <Form.Item label="Pick the range">
           {getFieldDecorator('range-picker', rangeConfig)(<RangePicker />)}
         </Form.Item>
-        <Form.Item label="Collaborator photo" extra="Please upload an image">
-          {getFieldDecorator('avatar', {
-            valuePropName: 'fileList',
-            getValueFromEvent: this.normFile,
-          })(
-            <Upload name="logo" action="/upload-image" listType="picture">
-              <Button>
-                <Icon type="upload" /> Click to upload
-              </Button>
-            </Upload>,
-          )}
+
+        <Form.Item label="Salary">
+          {getFieldDecorator('salary')(<Input placeholder="Salary amount" />)}
         </Form.Item>
 
         <Form.Item

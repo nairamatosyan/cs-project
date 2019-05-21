@@ -3,6 +3,8 @@ import { Padding, Margin } from 'styled-components-spacing';
 import { Row, Col, Typography, Button, Card } from 'antd';
 import { withRouter } from 'react-router-dom';
 import AddOrganizationForm from './AddOrganizationForm';
+import { getAccessToken } from '../../config/localStorage' 
+import axios from 'axios';
 
 class Organizations extends PureComponent {
   state = {
@@ -15,6 +17,19 @@ class Organizations extends PureComponent {
       id: 2,
       name: 'test2'
     }]
+  }
+  componentDidMount = () => {
+    const accessToken = getAccessToken();
+    axios.get('http://localhost:3030/organizations', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    }).then(({ data }) => {
+          this.setState({ data });
+        })
+        .catch(error => {
+          console.log(error);
+        })
   }
 
   render() {
@@ -30,7 +45,7 @@ class Organizations extends PureComponent {
 
               {this.state.data.map((item, key) => (
                 <Padding bottom={3} key={key}>
-                <Card hoverable={true} onClick={() => this.openOrganization(item.id)}>{item.name}</Card>
+                <Card hoverable={true} onClick={() => this.openOrganization(item._id)}>{item.name}</Card>
                 </Padding>
               ))}
             </div>}
@@ -50,7 +65,7 @@ class Organizations extends PureComponent {
   }
 
   openOrganization = (id) => {
-    this.props.history.push(`/organization/${id}`);
+    this.props.history.push(`/organizations/${id}`);
   }
 }
 

@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { Margin } from 'styled-components-spacing';
+import { withRouter } from 'react-router-dom';
+import { saveState } from '../../../config/localStorage' 
 import {
   Form, Icon, Input, Button, Col, Row
 } from 'antd';
+import axios from 'axios';
 
 
 class SignInPage extends Component {
@@ -49,11 +52,17 @@ class SignInPage extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        // send request
+        axios.post('http://localhost:3030/users/login', values).then(response => {
+          saveState(response.data)
+          this.props.history.push('/profile')
+        })
+        .catch(error => {
+          console.log(error);
+        })
       }
     });
   }
 }
 
 const FormWrapper = Form.create()(SignInPage);
-export default FormWrapper;
+export default withRouter(FormWrapper);

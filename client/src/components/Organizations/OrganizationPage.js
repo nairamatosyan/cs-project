@@ -1,11 +1,13 @@
 import React, { PureComponent } from 'react';
 import { Padding, Margin } from 'styled-components-spacing';
-import { Row, Col, Typography, Button, Modal, Icon } from 'antd';
+import { Row, Col, Typography, Button, Modal, Icon, message } from 'antd';
 import { withRouter } from 'react-router-dom';
 import AddCollaborator from './AddCollaborator';
 import AddPosition from './AddPosition';
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import axios from 'axios';
+import { getAccessToken } from '../../config/localStorage';
 require("highcharts/modules/sankey")(Highcharts);
 require("highcharts/modules/organization")(Highcharts);
 require("highcharts/modules/exporting")(Highcharts);
@@ -18,27 +20,23 @@ class OrganizationPage extends PureComponent {
     this.state = {
       id: null,
       data: {
-        name: 'test1',
-        positions: [{
-          id: 1,
-          name: 'testtt',
-        }, {
-          id: 2,
-          name: 'testtt 2',
-        }],
+        name: '',
+        positions: [],
         mainData: []
       }
     }
   }
   
   async componentDidMount() {
-    const query = new URLSearchParams(this.props.location.search);
-    const id = query.get('id');
-    this.setState({ id });
-
-    if (id) {
-      // get data here
-    }
+    const accessToken = getAccessToken();
+    axios.get(`http://localhost:3030${this.props.location.pathname}`, {
+        headers: { Authorization: `Bearer ${accessToken}`}
+      }).then(({ data }) => {
+        this.setState({data: {name: data.organization[0].name, positions: data.positionData, mainData: data.data}});
+      })
+      .catch(error => {
+        console.log(error);
+      })
   }
 
   render() {
@@ -77,6 +75,7 @@ class OrganizationPage extends PureComponent {
 
   
   getChartOptions = () => {
+    // console.log(this.state.mainData);
     return {
       chart: {
         height: 600,
@@ -91,92 +90,7 @@ class OrganizationPage extends PureComponent {
           type: 'organization',
           name: 'Positions',
           keys: ['from', 'to'],
-          data: [
-              ['Shareholders', 'Board'],
-              ['Board', 'CEO'],
-              ['CEO', 'CTO'],
-              ['CEO', 'CPO'],
-              ['CEO', 'CSO'],
-              ['CEO', 'CMO'],
-              ['CEO', 'HR'],
-              ['CTO', 'Product'],
-              ['CTO', 'Web'],
-              ['CSO', 'Sales'],
-              ['CMO', 'Market']
-          ],
-          levels: [{
-              level: 0,
-              color: 'silver',
-              dataLabels: {
-                  color: 'black'
-              },
-              height: 25
-          }, {
-              level: 1,
-              color: 'silver',
-              dataLabels: {
-                  color: 'black'
-              },
-              height: 25
-          }, {
-              level: 2,
-              color: '#980104'
-          }, {
-              level: 4,
-              color: '#359154'
-          }],
-          nodes: [{
-              id: 'Shareholders'
-          }, {
-              id: 'Board'
-          }, {
-              id: 'CEO',
-              title: 'CEO',
-              name: 'Grethe Hjetland',
-              image: 'https://wp-assets.highcharts.com/www-highcharts-com/blog/wp-content/uploads/2018/11/12132317/Grethe.jpg'
-          }, {
-              id: 'HR',
-              title: 'HR/CFO',
-              name: 'Anne Jorunn Fjærestad',
-              color: '#007ad0',
-              image: 'https://wp-assets.highcharts.com/www-highcharts-com/blog/wp-content/uploads/2018/11/12132314/AnneJorunn.jpg',
-          }, {
-              id: 'CTO',
-              title: 'CTO',
-              name: 'Christer Vasseng',
-              image: 'https://wp-assets.highcharts.com/www-highcharts-com/blog/wp-content/uploads/2018/11/12140620/Christer.jpg',
-              layout: 'hanging'
-          }, {
-              id: 'CPO',
-              title: 'CPO',
-              name: 'Torstein Hønsi',
-              image: 'https://wp-assets.highcharts.com/www-highcharts-com/blog/wp-content/uploads/2018/11/12131849/Torstein1.jpg'
-          }, {
-              id: 'CSO',
-              title: 'CSO',
-              name: 'Anita Nesse',
-              image: 'https://wp-assets.highcharts.com/www-highcharts-com/blog/wp-content/uploads/2018/11/12132313/Anita.jpg',
-              layout: 'hanging'
-          }, {
-              id: 'CMO',
-              title: 'CMO',
-              name: 'Vidar Brekke',
-              image: 'https://wp-assets.highcharts.com/www-highcharts-com/blog/wp-content/uploads/2018/11/13105551/Vidar.jpg',
-              layout: 'hanging'
-          }, {
-              id: 'Product',
-              name: 'Product developers'
-          }, {
-              id: 'Web',
-              name: 'General tech',
-              description: 'Web developers, sys admin'
-          }, {
-              id: 'Sales',
-              name: 'Sales team'
-          }, {
-              id: 'Market',
-              name: 'Marketing team'
-          }],
+          ...this.state.data.mainData,
           colorByPoint: false,
           color: '#007ad0',
           dataLabels: {

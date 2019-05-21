@@ -2,28 +2,18 @@ const mongoose = require('mongoose');
 const pbkdf2 = require('pbkdf2');
 
 const UserSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        lowercase: true,
-        unique: true,
-        required: true,
-        trim: true,
-        minlength: 4
-    },
+    // username: {
+    //     type: String,
+    //     lowercase: true,
+    //     unique: true,
+    //     required: true,
+    //     trim: true,
+    //     minlength: 4
+    // },
     email: {
         type: String,
         lowercase: true,
         unique: true,
-        required: true,
-        trim: true
-    },
-    first_name: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    last_name: {
-        type: String,
         required: true,
         trim: true
     },
@@ -35,28 +25,19 @@ const UserSchema = new mongoose.Schema({
 });
 
 
-UserSchema.statics.getUserByUsername = function(username) {
-    return User.findOne({ username }, {password: false});
+UserSchema.statics.findUserForLogin = function(email) {
+    return User.findOne({ email });
 }
-UserSchema.statics.findUserForLogin = function(username) {
-    return User.findOne({ username });
-}
-UserSchema.statics.getAllUsers = function() {
-    return User.find({}, {password: false});
-}
+
 UserSchema.methods.createUser = async function() {
-    // console.log(await User.findOne({$or: [{ email: this.email }, { username: this.username}]}));
-    if (await User.findOne({$or: [{ email: this.email }, { username: this.username}]})) {
+    console.log(this)
+    if (await User.findOne({ email: this.email })) {
         return 0;
     }
     this.password = pbkdf2.pbkdf2Sync(this.password, 'salt', 1, 32, 'sha512').toString('hex');
+    console.log(this, '22222')
     this.save();
     return 1;
-    // this.save((error) => {
-    //     if (error) {
-    //         throw error;
-    //     }
-    // });
 }
 UserSchema.methods.comparePassword = function(password) {
     return this.password === pbkdf2.pbkdf2Sync(password, 'salt', 1, 32, 'sha512').toString('hex');

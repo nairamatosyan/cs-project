@@ -19,8 +19,8 @@ class AppRouter extends PureComponent {
         <Route path="/sign-in" component={SignInPage} />
         <Route path="/sign-up" component={SignUpPage} />
         <Route path="/profile" component={Profile} />
-        <Route path="/organizations" component={Organizations} />
-        <Route path="/organization/:id" component={Organization} />
+        <Route path="/organizations/:id" component={Organization} />
+        <Route exact path="/organizations" component={Organizations} />
         <Route component={Notfound} />
       </Switch>
     </Router>

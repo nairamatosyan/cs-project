@@ -1,5 +1,6 @@
 const path = process.cwd();
 const User = require(`${path}/schemas/users.js`);
+const jwt = require('jsonwebtoken')
 const {
     UserNotFound,
     UserAlreadyExists,
@@ -8,9 +9,10 @@ const {
     UserIsLocked
 } = require(`${path}/errors/errors.js`);
 const maximum_allowed_wrong_passwords = process.env.maximum_allowed_wrong_passwords || 3;
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || '';
 
-async function login(username, password) {
-    const user = await User.findUserForLogin(username);
+async function login(email, password) {
+    const user = await User.findUserForLogin(email);
     if (!user) {
         throw new UserNotFound();
     }
@@ -24,6 +26,11 @@ async function login(username, password) {
     }
     user.failedLoginCount = 0;
     await user.save();
+    const accessToken = jwt.sign({
+        email,
+        _id: user._id
+      }, JWT_SECRET_KEY, { expiresIn: "24 hours"});
+    return { email, accessToken };
 }
 
 async function getUser(username) {
@@ -39,10 +46,6 @@ async function getAllUsers() {
 }
 
 async function createUser(input) {
-    if (input.username && input.username.length < 4) {
-        throw new ValidationError();
-    }
-    
     const user = new User(input);
     if (! await user.createUser()) {
         throw new UserAlreadyExists();

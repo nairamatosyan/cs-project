@@ -1,4 +1,5 @@
 const express = require('express');
+const passport = require('passport');
 
 const router = express.Router();
 
@@ -8,6 +9,7 @@ const Users = require(`${path}/models/users.js`);
 router.post('/', async function(req, res, next) {
     try {
         const { body } = req;
+        console.log(body);
         await Users.createUser(body);
         res.status(200).send('User is created successfully!');
     } catch (err) {
@@ -32,12 +34,11 @@ router.get('/:username', async function(req, res, next) {
 router.post('/login', async function(req, res, next) {
     try {
         const { body } = req;
-        await Users.login(body.username, body.password);
-        res.status(200).send('User is logged in successfully!');
+        const data = await Users.login(body.email, body.password);
+        res.status(200).json(data);
     } catch (err) {
         next(err);
     }
-
 })
 
 module.exports = router;

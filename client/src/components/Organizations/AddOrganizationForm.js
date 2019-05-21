@@ -5,7 +5,11 @@ import {
   Icon,
   Form,
   Input,
+  message,
 } from 'antd';
+import { getAccessToken } from '../../config/localStorage';
+import axios from 'axios';
+
 const { Option } = Select;
 let id = 0;
 
@@ -18,6 +22,21 @@ class AddOrganization extends PureComponent {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
+        const accessToken = getAccessToken();
+        axios.post('http://localhost:3030/organizations/add', {
+            data: values
+        }, {
+          headers: { Authorization: `Bearer ${accessToken}`}
+        }).then(({ data }) => {
+          if (data) {
+            window.location.reload();
+            return;
+          }
+          message.error('Something went wrong!');
+        })
+        .catch(error => {
+          console.log(error);
+        })
         console.log('Received values of form: ', values);
       }
     });
@@ -44,10 +63,6 @@ class AddOrganization extends PureComponent {
       keys: nextKeys,
     });
   };
-
-  selectParent = (value) => {
-    console.log(value);
-  }
 
   render() {
     const { getFieldDecorator, getFieldValue, getFieldsValue } = this.props.form;
@@ -93,7 +108,6 @@ class AddOrganization extends PureComponent {
           })(
             <Select
               placeholder="Select parent"
-              onChange={this.selectParent}
             >
               {getFieldsValue().positions.map((item, key) => (
                 (item && key !== k) && <Option key={key} value={key}>{item}</Option>
