@@ -20,7 +20,7 @@ class SignInPage extends Component {
           <Form onSubmit={this.handleSubmit}>
             <Form.Item>
               {getFieldDecorator('email', {
-                rules: [{ required: true, message: 'email cannot be blank!' }],
+                rules: [{ required: true, message: 'Email cannot be blank!' }],
               })(
                 <Input prefix={<Icon type="user" style={iconStyles} />} type="email" placeholder="Email" />
               )}
