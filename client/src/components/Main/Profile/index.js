@@ -2,15 +2,15 @@ import React, { PureComponent } from 'react';
 import { Padding, Margin } from 'styled-components-spacing';
 import { Row, Col, Typography, Button, Avatar } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { saveState, loadState } from '../../../config/localStorage' 
+import { loadState } from '../../../config/localStorage' 
 
 class Profile extends PureComponent {
-  state = {
-    email: '',
-  }
+  constructor(props) {
+    super(props);
 
-  componentDidMount = () => {
-    this.setState({ email: loadState().email });
+    this.state = {
+      email: loadState().email,
+    }
   }
 
   openOrganizations = () => {
@@ -18,7 +18,6 @@ class Profile extends PureComponent {
   }
 
   render() {
-    console.log(this.email)
     return (<React.Fragment>
       <Margin top={5} bottom={5}>
           <Padding bottom={5}>

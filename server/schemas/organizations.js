@@ -15,7 +15,6 @@ OrganizationSchema.statics.getUserOrganizations = function(id) {
 }
 
 OrganizationSchema.statics.addNew = async function(name, id) {
-    console.log(1111, name);
     const organization = new this({
         name,
         user: id

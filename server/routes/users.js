@@ -9,7 +9,6 @@ const Users = require(`${path}/models/users.js`);
 router.post('/', async function(req, res, next) {
     try {
         const { body } = req;
-        console.log(body);
         await Users.createUser(body);
         res.status(200).send('User is created successfully!');
     } catch (err) {

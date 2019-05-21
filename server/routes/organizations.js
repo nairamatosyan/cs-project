@@ -30,7 +30,6 @@ router.post('/addCollaborator', passport.authenticate('jwt', { session: false })
 
 router.get('/:id', passport.authenticate('jwt', { session: false }), async function(req, res, next) {
     try {
-        console.log(11111111);
         res.status(200).json(await Organizations.getOrganizationData(req.params.id));
     } catch (err) {
         next(err);

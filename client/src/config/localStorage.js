@@ -25,11 +25,15 @@ export const loadState = () => {
     return (state && state.user) || {};
   };
 
-  export const saveState = (data) => {
-    try {
-      const serializedState = JSON.stringify(data);
-      localStorage.setItem('state', serializedState);
-    } catch (e) {
-      // ignore errors
-    }
-  };
+  export const saveState = (data) => (new Promise((res, rej)=> {
+      try {
+        const serializedState = JSON.stringify(data);
+        localStorage.setItem('state', serializedState);
+        res();
+      } catch (e) {
+        // ignore errors
+        rej();
+      }
+
+
+    }));

@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
 import { Padding, Margin } from 'styled-components-spacing';
-import { Row, Col, Typography, Button, Card } from 'antd';
+import { Row, Col, Typography, Button, Card, message } from 'antd';
 import { withRouter } from 'react-router-dom';
 import AddOrganizationForm from './AddOrganizationForm';
-import { getAccessToken } from '../../config/localStorage' 
+import { getAccessToken } from '../../config/localStorage';
+import { API_ROOT } from '../../config/env-vars'; 
 import axios from 'axios';
 
 class Organizations extends PureComponent {
@@ -20,7 +21,7 @@ class Organizations extends PureComponent {
   }
   componentDidMount = () => {
     const accessToken = getAccessToken();
-    axios.get('http://localhost:3030/organizations', {
+    axios.get(`${API_ROOT}/organizations`, {
       headers: {
         Authorization: `Bearer ${accessToken}`
       }
@@ -28,7 +29,7 @@ class Organizations extends PureComponent {
           this.setState({ data });
         })
         .catch(error => {
-          console.log(error);
+          message.error('Something went wrong! Please try again.')
         })
   }
 
