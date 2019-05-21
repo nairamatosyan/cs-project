@@ -2,13 +2,23 @@ import React, { PureComponent } from 'react';
 import { Padding, Margin } from 'styled-components-spacing';
 import { Row, Col, Typography, Button, Avatar } from 'antd';
 import { withRouter } from 'react-router-dom';
+import { saveState, loadState } from '../../../config/localStorage' 
 
 class Profile extends PureComponent {
+  state = {
+    email: '',
+  }
+
+  componentDidMount = () => {
+    this.setState({ email: loadState().email });
+  }
+
   openOrganizations = () => {
       this.props.history.push('/organizations');
   }
 
   render() {
+    console.log(this.email)
     return (<React.Fragment>
       <Margin top={5} bottom={5}>
           <Padding bottom={5}>
@@ -28,10 +38,7 @@ class Profile extends PureComponent {
             <Col span={10}>
               <Padding bottom={4}>
                 <Row>
-                  <Typography.Text strong>Username: test-username</Typography.Text>
-                </Row>
-                <Row>
-                  <Typography.Text strong>Email: test@email.com</Typography.Text>
+                  <Typography.Text strong>Email: {this.state.email}</Typography.Text>
                 </Row>
               </Padding>
             </Col>

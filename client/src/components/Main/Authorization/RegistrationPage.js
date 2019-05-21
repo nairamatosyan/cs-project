@@ -3,6 +3,7 @@ import {
   Form, Icon, Input, Button, Col, Row
 } from 'antd';
 import { Margin } from 'styled-components-spacing';
+import axios from 'axios';
 
 class RegistrationPage extends PureComponent {
   render() {
@@ -75,7 +76,16 @@ class RegistrationPage extends PureComponent {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        // send request
+        axios.post('http://localhost:3030/users',{
+          email: values.email, 
+          password: values.password}).then(response => {
+          
+          alert('You have registered successfully. Now please login to your account.');
+          window.location = '/sign-in';
+        })
+        .catch(error => {
+          console.log(error);
+        })
       }
     });
   }
