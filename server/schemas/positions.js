@@ -34,6 +34,7 @@ PositionSchema.statics.savePositions = async function(positions, parents, organi
 PositionSchema.statics.getPositionData = async function(organizationId) {
     return Position.find({organization: organizationId}).sort('index');
 }
+
 const Position = mongoose.model('Position', PositionSchema);
 
 module.exports = Position;

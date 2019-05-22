@@ -28,6 +28,16 @@ router.post('/addCollaborator', passport.authenticate('jwt', { session: false })
     }
 })
 
+router.post('/addPosition', passport.authenticate('jwt', { session: false }), async function(req, res, next) {
+    try {
+        const { body } = req;
+        const data = await Organizations.addNewPosition(body);
+        res.status(200).json(data);
+    } catch (err) {
+        next(err);
+    }
+})
+
 router.get('/:id', passport.authenticate('jwt', { session: false }), async function(req, res, next) {
     try {
         res.status(200).json(await Organizations.getOrganizationData(req.params.id));
