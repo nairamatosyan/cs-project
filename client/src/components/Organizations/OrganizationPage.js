@@ -78,7 +78,7 @@ class OrganizationPage extends PureComponent {
   getChartOptions = () => {
     return {
       chart: {
-        height: 600,
+        height: this.state.data.positions.length * 120,
         inverted: true,
       },
 

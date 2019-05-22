@@ -37,7 +37,9 @@ class HomePage extends PureComponent {
             </Padding>
             <Row type="flex" justify="center"><Button onClick={this.signUp}>Sign up</Button></Row>
           </div> : 
+          <Row type="flex" justify="center">
             <Typography.Title level={3}>Welcome to our team!<br />Start visualizing the tree of your company right now!</Typography.Title>
+          </Row>
           }
         </Margin>
       </React.Fragment>

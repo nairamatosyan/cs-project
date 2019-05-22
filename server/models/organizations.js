@@ -49,10 +49,13 @@ const getOrganizationData = async (id) => {
                 flag = true;
                 for (key in rootEmployees) {
                     rootEmployee = rootEmployees[key];
+                    const startDate = new Date(rootEmployee.start_date);
+                    const endDate = new Date(rootEmployee.end_date);
                     data.nodes.push({
                         id: positionParent.name,
                         title: rootEmployee.name,
-                        description: rootEmployee.salary_amount
+                        description: 'Date Range: ' + startDate.toLocaleDateString("en-US") + ' - ' + endDate.toLocaleDateString("en-US") + 
+                            '<br/> Salary Amount: ' + rootEmployee.salary_amount
                     })
                 }
             }
@@ -71,7 +74,7 @@ const getOrganizationData = async (id) => {
                             id: positionChild.name + key,
                             title: positionEmployee.name,
                             description: 'Date Range: ' + startDate.toLocaleDateString("en-US") + ' - ' + endDate.toLocaleDateString("en-US") + 
-                            ' Salary Amount: ' + positionEmployee.salary_amount
+                            '<br/>Salary Amount: ' + positionEmployee.salary_amount
                         })
                     }
                 } else {
